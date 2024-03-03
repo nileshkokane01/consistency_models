@@ -674,6 +674,7 @@ class UNetModel(nn.Module):
                 num_heads=num_heads,
                 num_head_channels=num_head_channels,
                 use_new_attention_order=use_new_attention_order,
+                attention_type=""
             ),
             ResBlock(
                 ch,
@@ -710,6 +711,7 @@ class UNetModel(nn.Module):
                             num_heads=num_heads_upsample,
                             num_head_channels=num_head_channels,
                             use_new_attention_order=use_new_attention_order,
+                            attention_type=""
                         )
                     )
                 if level and i == num_res_blocks:
