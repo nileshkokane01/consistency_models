@@ -341,7 +341,7 @@ class QKVFlashAttention(nn.Module):
         **kwargs,
     ) -> None:
         from einops import rearrange
-        from flash_attn import flash_attn_qkvpacked_func, flash_attn_func
+        from flash_attn.flash_attention import FlashAttention
 
         assert batch_first
         factory_kwargs = {"device": device, "dtype": dtype}
@@ -356,8 +356,8 @@ class QKVFlashAttention(nn.Module):
         self.head_dim = self.embed_dim // num_heads
         assert self.head_dim in [16, 32, 64], "Only support head_dim == 16, 32, or 64"
 
-        self.inner_attn = flash_attn_func(
-                dropout_p=attention_dropout, **factory_kwargs
+        self.inner_attn = FlashAttention(
+            attention_dropout=attention_dropout, **factory_kwargs
         )
         self.rearrange = rearrange
 
@@ -628,6 +628,7 @@ class UNetModel(nn.Module):
                             num_heads=num_heads,
                             num_head_channels=num_head_channels,
                             use_new_attention_order=use_new_attention_order,
+                            attention_type=""
                         )
                     )
                 self.input_blocks.append(TimestepEmbedSequential(*layers))
